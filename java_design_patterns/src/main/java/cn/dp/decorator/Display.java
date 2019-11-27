@@ -1,3 +1,5 @@
+package cn.dp.decorator;
+
 public abstract class Display {
     public abstract int getColunms();
     public abstract int getRows();
