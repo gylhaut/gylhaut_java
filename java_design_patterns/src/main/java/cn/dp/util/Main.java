@@ -2,7 +2,27 @@ package cn.dp.util;
 
 public class Main {
     public static void main(String[] args){
+        Node head = new Node(1);
+        Node node1 = new Node(2);
+        Node node2 = new Node(3);
+        Node node3 = new Node(4);
+        head.next = node1;
+        node1.next = node2;
+        node2.next = node3;
 
+        Node h = head;
+        while (head!= null){
+            System.out.println(head.value);
+            head = head.next;
+        }
+
+        System.out.println("****************************************");
+        // 打印反转前的链表
+        h =reverseList(h);
+        while (h != null){
+            System.out.println(h.value);
+            h = h.next;
+        }
     }
 
     /**
