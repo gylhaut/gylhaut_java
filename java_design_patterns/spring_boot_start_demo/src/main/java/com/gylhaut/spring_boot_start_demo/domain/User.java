@@ -1,9 +1,18 @@
 package com.gylhaut.spring_boot_start_demo.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class User {
     // 主键
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     // 用户名
+
     private String username;
     // 密码
     private String password;
