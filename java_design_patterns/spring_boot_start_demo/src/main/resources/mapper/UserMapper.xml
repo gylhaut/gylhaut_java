@@ -1,7 +1,83 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.gylhaut.spring_boot_start_demo.mapper.UserMapper">
+    <resultMap id="userMap" type="com.gylhaut.spring_boot_start_demo.domain.User">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="name" property="name"/>
+    </resultMap>
+    <sql id="defaultSql">
+        SELECT  * from user
+    </sql>
+    <!--
     <select id="queryUserList" resultType="user">
         select * from user
     </select>
+    -->
+    <!--查询所有-->
+    <select id="queryUserList" resultMap="userMap">
+        select * from user;
+    </select>
+
+    <!--保存用户-->
+    <insert id="saveUser" parameterType="user">
+        <selectKey keyProperty="id" keyColumn="id" resultType="java.lang.Long" order="AFTER">
+            SELECT last_insert_id();
+        </selectKey>
+        INSERT INTO user (username,password,name) VALUES (#{username},#{password},#{name});
+    </insert>
+    <!--更新用户-->
+    <update id="updateUser" parameterType="user">
+        UPDATE user set username=#{username},password=#{password},name=#{name} where id=#{id}
+    </update>
+    <!--删除用户-->
+    <delete id="deleteUser" parameterType="long">
+        delete from user where id = #{id}
+    </delete>
+    <!--根据id查询用户-->
+    <select id="findById" parameterType="long" resultMap="userMap">
+        select * from user where id = #{id}
+    </select>
+    <!-- 根据名称模糊查询 -->
+    <select id="findByName" parameterType="string" resultMap="userMap">
+        select * from user where username like #{name}
+        <!-- select * from user where username like '%${value}%'-->
+    </select>
+    <select id="findTotal" resultType="int">
+      select COUNT(1) from USER;
+    </select>
+    
+    <select id="findUserByVo" parameterType="com.gylhaut.spring_boot_start_demo.domain.QueryVo"
+            resultType="user">
+        select * from USER WHERE username LIKE #{user.username};
+    </select>
+
+    <!--根据添加查询-->
+    <select id="findUserByCondition" parameterType="user" resultMap="userMap">
+        select * from USER
+        <where>
+            <if test="username != null">
+                and  username = #{username}
+            </if>
+
+            <if test="name != null">
+               and name = #{name}
+            </if>
+        </where>
+    </select>
+    <!--查询所有用户在id的集合之中-->
+    <select id="findInIds" resultType="user" parameterType="queryvo">
+        <include refid="defaultSql"></include>
+        <where>
+            <if test="ids !=null and ids.size() >0">
+                <foreach collection="ids" open="id in ( " close=")" item="uid" separator=",">
+                    #{uid}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+
+
 </mapper>
